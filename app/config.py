@@ -1,0 +1,1 @@
+Model_name = 'llama3.2:3b'
