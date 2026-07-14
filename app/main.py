@@ -1,13 +1,13 @@
-from app.llm import LLMManager
+from app.loader import DocumentLoader
 
 def main():
-    llm = LLMManager()
+    loader = DocumentLoader("Data\documents\sample.pdf")
+    documents = loader.load()
+    print(f"Total Pages: {len(documents)}\n")
+    print("="*60)
+    print(documents[0].page_content)
+    print('='*60)
+    print(documents[0].metadata)
 
-    question  = "What is Machine learning?"
-    answer = llm.generate_response(question)
-
-    print(f"Question : {question}")
-    print(f"Answer: {answer}")
-
-if __name__ =="__main__":
+if __name__ == "__main__":
     main()
