@@ -1,6 +1,7 @@
 from app.loader import DocumentLoader
 from app.chunker import TextChunker
 from app.embeddings import EmbeddingManager
+from app.vector_store import VectorStoreManager
 
 def main():
     loader = DocumentLoader('Data\documents\sample.pdf')
@@ -11,21 +12,15 @@ def main():
 
     embedding_manager = EmbeddingManager()
     embedding_model = embedding_manager.get_embedding_model()
-    vector = embedding_model.embed_query(
-        chunks[0].page_content  
-    )
 
-    print(f"Page Loaded: {len(documents)}")
-    print(f"Chunk Created: {len(chunks)}")
+    vector_manager = VectorStoreManager(embedding_model)
+    vector_store = vector_manager.create_vector_store(chunks)
+    vector_manager.save_vectore_store(vector_store)
 
-    print(f"Embedding Dimensions are: {len(vector)}")
+    print("FAISS Database successfully created")
+    
+    print(f"indexed chunks :{len(chunks)}")
 
-
-    print("\nFirst Chunk")
-    print(chunks[0].page_content)
-    print("\nMetadata")
-    print(chunks[0].metadata)
-    print(vector[:10])
 
 if __name__ == "__main__":
     main()
