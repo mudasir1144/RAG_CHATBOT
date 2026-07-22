@@ -20,7 +20,7 @@ class ChatBot:
         embedding_model = embedding_manager.get_embedding_model()
 
         vector_manager = VectorStoreManager(embedding_model)
-        vector_store = vector_manager.create_vector_store(chunks)
+        vector_store = vector_manager.get_vector_store(chunks)
     
         self.retriever = Retriever(vector_store)
     

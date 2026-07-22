@@ -13,7 +13,7 @@ class VectorStoreManager:
         )
         return vector_store
     
-    def save_vectore_store(self,vector_store):
+    def save_vector_store(self,vector_store):
         save_path =Path(VECTOR_DB_PATH)
 
         save_path.parent.mkdir(parents = True , exist_ok = True)
@@ -24,6 +24,17 @@ class VectorStoreManager:
     def load_vector_store(self):
         return FAISS.load_local(
             str(VECTOR_DB_PATH),
-            self.emdedding_model,
+            self.embedding_model,
             allow_dangerous_deserialization = True
         )
+
+    def get_vector_store(self, chunks):
+
+        if Path(VECTOR_DB_PATH).exists():
+            print("📂 Loading existing FAISS index...")
+            return self.load_vector_store()
+
+        print("⚡ Creating new FAISS index...")
+        vector_store = self.create_vector_store(chunks)
+        self.save_vector_store(vector_store)
+        return vector_store
