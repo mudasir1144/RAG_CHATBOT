@@ -1,7 +1,4 @@
-from app.loader import DocumentLoader
-from app.chunker import TextChunker
-from app.embeddings import EmbeddingManager
-from app.vector_store import VectorStoreManager
+from app.knowledge_base import KnowledgeBase
 from app.retriever import Retriever
 from app.prompt_builder import PromptBuilder
 from app.llm import LLMManager
@@ -10,17 +7,11 @@ class ChatBot:
     def __init__(self):
         print(f"Chatbot Initialized")
 
-        loader = DocumentLoader('Data\documents\sample.pdf')
-        documents = loader.load()
+        knowledge_base = KnowledgeBase(
+            "data/documents/sample.pdf"
+        )
 
-        chunker = TextChunker()
-        chunks = chunker.split_documents(documents)
-
-        embedding_manager = EmbeddingManager()
-        embedding_model = embedding_manager.get_embedding_model()
-
-        vector_manager = VectorStoreManager(embedding_model)
-        vector_store = vector_manager.get_vector_store(chunks)
+        vector_store = knowledge_base.get_vector_store()
     
         self.retriever = Retriever(vector_store)
     
@@ -30,12 +21,9 @@ class ChatBot:
 
         print("Chat bot Ready!")
         
-    def ask(self , question:str)->str:
-        retrieved_docs = self.retriever.retrieve(question)
-        prompt = self.prompt_builder.build_prompt(
-            question,
-            retrieved_docs
-        )
+    def ask(self , question):
+        docs = self.retriever.retrieve(question)
+        prompt = self.prompt_builder.build_prompt(question , docs)
         answer = self.llm.generate_response(prompt)
         return answer
     

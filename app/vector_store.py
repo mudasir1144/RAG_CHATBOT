@@ -28,13 +28,15 @@ class VectorStoreManager:
             allow_dangerous_deserialization = True
         )
 
+    
     def get_vector_store(self, chunks):
 
-        if Path(VECTOR_DB_PATH).exists():
-            print("📂 Loading existing FAISS index...")
+        index_file = Path(VECTOR_DB_PATH) / "index.faiss"
+        if index_file.exists():
+            print("📂 Loading existing vector database...")
             return self.load_vector_store()
 
-        print("⚡ Creating new FAISS index...")
+        print("⚡ Creating vector database...")
         vector_store = self.create_vector_store(chunks)
         self.save_vector_store(vector_store)
         return vector_store
